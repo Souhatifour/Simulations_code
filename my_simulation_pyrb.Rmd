@@ -1,0 +1,479 @@
+---
+title: "sim_function"
+output: html_document
+date: "2022-12-28"
+---
+
+
+```{r}
+#install.packages("dplyr")
+library(dplyr)
+#install.packages("usethis")
+library(usethis)
+#install.packages("devtools")
+library("devtools")
+#install.packages("Summix")
+library("Summix")
+#install.packages("gtools")
+library(gtools)
+#install.packages("tidyr")
+library(tidyr)
+#install.packages("ggplot2")
+library(ggplot2)
+```
+
+
+
+```{r}
+getwd()
+setwd("~/Downloads")
+```
+
+```{r}
+chr22  <- read.table("chr22.gnomad_hgdp1kg.merge.AFfiltered.text.gz",header = TRUE, nrows =30000)
+```
+
+```{r}
+
+# generating a real allele frequencies
+
+# AFR
+chr22$AF_AFR <- (chr22$Num_allele_obs_esn * chr22$allele_1_freq_esn + chr22$Num_allele_obs_gwd * chr22$allele_1_freq_gwd + chr22$Num_allele_obs_lwk * chr22$allele_1_freq_lwk + chr22$Num_allele_obs_msl * chr22$allele_1_freq_msl + chr22$Num_allele_obs_yri * chr22$allele_1_freq_yri + chr22$Num_allele_obs_bantukenya * chr22$allele_1_freq_bantukenya + chr22$Num_allele_obs_bantusafrica * chr22$allele_1_freq_bantusafrica + chr22$Num_allele_obs_mandenka * chr22$allele_1_freq_mandenka + chr22$Num_allele_obs_yoruba * chr22$allele_1_freq_yoruba)/ (chr22$Num_allele_obs_esn + chr22$Num_allele_obs_gwd + chr22$Num_allele_obs_lwk + chr22$Num_allele_obs_msl + chr22$Num_allele_obs_yri + chr22$Num_allele_obs_bantukenya + chr22$Num_allele_obs_bantusafrica + chr22$Num_allele_obs_mandenka + chr22$Num_allele_obs_yoruba)
+
+#IAM
+chr22$AF_IAM <- (chr22$Num_allele_obs_colombian * chr22$allele_1_freq_colombian + chr22$Num_allele_obs_karitiana * chr22$allele_1_freq_karitiana + chr22$Num_allele_obs_maya * chr22$allele_1_freq_maya + chr22$Num_allele_obs_pima * chr22$allele_1_freq_pima + chr22$Num_allele_obs_surui * chr22$allele_1_freq_surui) /  (chr22$Num_allele_obs_colombian + chr22$Num_allele_obs_karitiana + chr22$Num_allele_obs_maya + chr22$Num_allele_obs_pima + chr22$Num_allele_obs_surui)
+
+#EAS
+chr22$AF_EAS <- (chr22$Num_allele_obs_cdx * chr22$allele_1_freq_cdx + chr22$Num_allele_obs_chb * chr22$allele_1_freq_chb + chr22$Num_allele_obs_chs * chr22$allele_1_freq_chs + chr22$Num_allele_obs_jpt * chr22$allele_1_freq_jpt + chr22$Num_allele_obs_khv * chr22$allele_1_freq_khv + chr22$Num_allele_obs_cambodian * chr22$allele_1_freq_cambodian + chr22$Num_allele_obs_dai * chr22$allele_1_freq_dai + chr22$Num_allele_obs_daur * chr22$allele_1_freq_daur + chr22$Num_allele_obs_han * chr22$allele_1_freq_han + chr22$Num_allele_obs_hezhen * chr22$allele_1_freq_hezhen + chr22$Num_allele_obs_japanese * chr22$allele_1_freq_japanese + chr22$Num_allele_obs_lahu * chr22$allele_1_freq_lahu + chr22$Num_allele_obs_miaozu * chr22$allele_1_freq_miaozu + chr22$Num_allele_obs_mongola * chr22$allele_1_freq_mongola + chr22$Num_allele_obs_naxi * chr22$allele_1_freq_naxi + chr22$Num_allele_obs_oroqen * chr22$allele_1_freq_oroqen + chr22$Num_allele_obs_she * chr22$allele_1_freq_she + chr22$Num_allele_obs_tu * chr22$allele_1_freq_tu + chr22$Num_allele_obs_tujia * chr22$allele_1_freq_tujia + chr22$Num_allele_obs_xibo * chr22$allele_1_freq_xibo + chr22$Num_allele_obs_yizu * chr22$allele_1_freq_yizu)/ (chr22$Num_allele_obs_cdx + chr22$Num_allele_obs_chb + chr22$Num_allele_obs_chs + chr22$Num_allele_obs_jpt + chr22$Num_allele_obs_khv + chr22$Num_allele_obs_cambodian + chr22$Num_allele_obs_dai + chr22$Num_allele_obs_daur + chr22$Num_allele_obs_han + chr22$Num_allele_obs_hezhen + chr22$Num_allele_obs_japanese + chr22$Num_allele_obs_lahu  + chr22$Num_allele_obs_miaozu + chr22$Num_allele_obs_mongola + chr22$Num_allele_obs_naxi + chr22$Num_allele_obs_oroqen + chr22$Num_allele_obs_she + chr22$Num_allele_obs_tu + chr22$Num_allele_obs_tujia + chr22$Num_allele_obs_xibo + chr22$Num_allele_obs_yizu)
+
+#EUR
+chr22$AF_EUR <- (chr22$Num_allele_obs_ceu * chr22$allele_1_freq_ceu + chr22$Num_allele_obs_gbr * chr22$allele_1_freq_gbr + chr22$Num_allele_obs_ibs * chr22$allele_1_freq_ibs + chr22$Num_allele_obs_tsi * chr22$allele_1_freq_tsi + chr22$Num_allele_obs_basque * chr22$allele_1_freq_basque + chr22$Num_allele_obs_french * chr22$allele_1_freq_french + chr22$Num_allele_obs_italian * chr22$allele_1_freq_italian + chr22$Num_allele_obs_orcadian * chr22$allele_1_freq_orcadian + chr22$Num_allele_obs_sardinian * chr22$allele_1_freq_sardinian + chr22$Num_allele_obs_tuscan * chr22$allele_1_freq_tuscan) / (chr22$Num_allele_obs_ceu + chr22$Num_allele_obs_gbr + chr22$Num_allele_obs_ibs + chr22$Num_allele_obs_tsi + chr22$Num_allele_obs_basque + chr22$Num_allele_obs_french + chr22$Num_allele_obs_italian  + chr22$Num_allele_obs_orcadian + chr22$Num_allele_obs_sardinian + chr22$Num_allele_obs_tuscan)
+
+# SAS
+chr22$AF_SAS <- (chr22$Num_allele_obs_kalash * chr22$allele_1_freq_kalash + chr22$Num_allele_obs_beb * chr22$allele_1_freq_beb + chr22$Num_allele_obs_gih * chr22$allele_1_freq_gih + chr22$Num_allele_obs_itu * chr22$allele_1_freq_itu + chr22$Num_allele_obs_pjl * chr22$allele_1_freq_pjl + chr22$Num_allele_obs_stu * chr22$allele_1_freq_stu) / (chr22$Num_allele_obs_kalash + chr22$Num_allele_obs_beb + chr22$Num_allele_obs_gih + chr22$Num_allele_obs_itu + chr22$Num_allele_obs_pjl + chr22$Num_allele_obs_stu)
+```
+
+```{r}
+chr22flt <- chr22[chr22$AF_AFR>0.01 & chr22$AF_AFR<0.99 | chr22$AF_IAM>0.01 & chr22$AF_IAM<0.99 | chr22$AF_EAS>0.01 & chr22$AF_EAS<0.99| chr22$AF_EUR>0.01 & chr22$AF_EUR<0.99 | chr22$AF_SAS>0.01 & chr22$AF_SAS<0.99,]
+```
+
+```{r}
+chr22flt <- na.omit(chr22flt)
+```
+
+```{r}
+
+# sampling 10000 SNPs
+refdat = chr22flt %>% 
+      sample_n(10000) %>% 
+      select(SNP, A1, A2, AF_AFR, AF_EAS, AF_EUR, AF_IAM, AF_SAS) %>% 
+      rename(rsID = SNP, AFR = AF_AFR, EAS = AF_EAS, EUR = AF_EUR, IAM = AF_IAM, SAS = AF_SAS)
+```
+
+
+```{r}
+
+# generate an actual ancestry proportion (eg., African American population)
+parameters = NULL
+for (k in 1)
+    {
+ 
+  AFR= 0.80
+  EUR= 0.20
+  IAM= 0.00
+  EAS= 0.00
+  SAS=0.00
+       parameters = rbind(parameters, data.frame(AFR,EUR,IAM,EAS,SAS))
+}
+
+write.table(parameters,
+            file = "one_combo_of_AFRAMR",
+            row.names = FALSE)
+```
+
+
+
+
+################ Simulations #####################
+
+
+```{r}
+
+parameters= read.csv("one_combo_of_AFRAMR",sep = "")
+
+# Pulls reference data from parameters
+Ancestry_names = as.data.frame(t(colnames(parameters)))
+
+# Pulls Observed data from parameters
+Ancestry_prop = as.numeric(parameters[1,])
+
+# number of ancestries
+Ancestry_num = dim(Ancestry_names)[2]
+
+
+
+
+# Initialize output data frame
+finalframe= data.frame(matrix(vector(), 0, (21 + dim(parameters)[2]),
+                               dimnames=list(c(), c('P_Num', 'T_Num', 'Seed', names(parameters),
+                                                    'AFR_prop', 'EAS_prop', 'EUR_prop', 'IAM_prop', 'SAS_prop',
+                                                    'R_AFR', 'R_EAS', 'R_EUR', 'R_IAM', 'R_SAS', 'R_val', 'R_iter', 'R_time',
+                                                    'R_AFR_acc', 'R_EAS_acc', 'R_EUR_acc', 'R_IAM_acc', 'R_SAS_acc'))),
+                        stringsAsFactors=F)
+```
+
+
+
+
+```{r}
+Sim_func <- function(N, rep, SNPs){
+
+# N sample size
+# rep number of simulation replicates
+# SNPs number of SNPs 
+
+  
+
+#### simulate reference allele frequencies for each of the 5 ancestries 
+# Generate allele counts for population using binom 
+
+AF_ref_AF  <- t(sapply(refdat[,4],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
+AF_ref_EAS <- t(sapply(refdat[,5],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
+AF_ref_EUR <- t(sapply(refdat[,6],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
+AF_ref_IAM <- t(sapply(refdat[,7],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
+AF_ref_SAS <- t(sapply(refdat[,8],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
+
+# data frame to store outputs from simulation
+  outframe = finalframe[FALSE,]
+  
+   for (j in 1:rep){ 
+
+####  simulate observed allele frequencies for each of the 5 ancestries
+    
+  pop_matrix = matrix(0, nrow = SNPs, ncol = 3)
+    
+    ##### Generate allele counts for population using multinom 
+    for (i in 1:ancnum){
+      popmatrixadd = t(sapply(refdat[[as.character(Ancestry_names[1,i])]], function(x){x2<-as.numeric(x); rmultinom(1, ntot * Ancestry_prop[i], prob=(c(x2**2, 2*x2*(1-x2), (1-x2)**2)))}))
+      pop_matrix = pop_matrix + popmatrixadd
+    }
+    master_frame_gen1 <- data.frame(refdat[,c(1:4)], pop_matrix)
+    master_frame_gen1$AF <- (2 * master_frame_gen1[,5] + master_frame_gen1[,6]) / (2 * ntot)
+     MAF_thresh = 0.01
+     master_frame_gen2 <- master_frame_gen1[master_frame_gen1$AF > MAF_thresh & master_frame_gen1$AF < (1-MAF_thresh),]
+    obsvecm = master_frame_gen2 %>% dplyr::select(rsID, AF)
+    
+    ########## merge AF_obs with AF_ref for each replicates
+    
+    refdatsimu= cbind(refdat['rsID'], AF_ref_AF[,j], AF_ref_EAS[,j], AF_ref_EUR[,j],AF_ref_IAM[,j],  AF_ref_SAS[,j])
+    colnames(refdatsimu) <- c("rsID","AFR","EAS", "EUR", "IAM", "SAS")
+    mergeframe= merge(refdatsimu,obsvecm, by="rsID") %>% dplyr::select("AFR", "EAS", "EUR", "IAM", "SAS","AF")
+    
+    ######## run Summix
+    R_sum = summix(as.data.frame(mergeframe), reference = c("AFR", "EAS", "EUR", "IAM", "SAS"), observed = "AF")
+    
+    testinfo = data.frame(P_Num = m, T_Num = j, Seed = seed)
+    
+    # Save parameters
+    parinfo = parameters
+    
+    
+    # Convert to character
+    Ancestry_names[] <- lapply(Ancestry_names, as.character)
+    
+    # Actual proportions 
+    Actual_prop = data.frame(AFR_prop = ifelse('AFR' %in% Ancestry_names, Ancestry_prop[which(Ancestry_names == 'AFR')], 0),
+                          EAS_prop = ifelse('EAS' %in% Ancestry_names, Ancestry_prop[which(Ancestry_names == 'EAS')], 0),
+                          EUR_prop = ifelse('EUR' %in% Ancestry_names, Ancestry_prop[which(Ancestry_names == 'EUR')], 0),
+                          IAM_prop = ifelse('IAM' %in% Ancestry_names, Ancestry_prop[which(Ancestry_names == 'IAM')], 0),
+                          SAS_prop = ifelse('SAS' %in% Ancestry_names, Ancestry_prop[which(Ancestry_names == 'SAS')], 0))
+    
+    # Simulated proportions
+    Sim_prop = data.frame(R_AFR = R_sum[5],
+                       R_EAS = R_sum[6],
+                       R_EUR = R_sum[7],
+                       R_IAM = R_sum[8],
+                       R_SAS = R_sum[9],
+                       R_val = R_sum[1],
+                       R_iter = R_sum[2],
+                       R_time = R_sum[3])
+    # Accuracy, "True proportions" - Estimated
+    Accuracy = data.frame(R_AFR_acc = (Sim_prop[,'AFR'] - Actual_prop[,'AFR_prop']),
+                      R_EAS_acc = (Sim_prop[,'EAS'] - Actual_prop[,'EAS_prop']),
+                      R_EUR_acc = (Sim_prop[,'EUR'] - Actual_prop[,'EUR_prop']),
+                      R_IAM_acc = (Sim_prop[,'IAM'] - Actual_prop[,'IAM_prop']),
+                      R_SAS_acc = (Sim_prop[,'SAS'] - Actual_prop[,'SAS_prop']))
+    # Bind Data
+    outline = cbind(testinfo, parinfo, Actual_prop, Sim_prop, Accuracy)
+    outframe = rbind(outframe, outline)
+   
+  finalframe = rbind(finalframe, outframe)  
+   }
+return(finalframe)
+}
+```
+
+
+```{r}
+finalframe_5 <- Sim_func(5,100,10000)
+finalframe_10 <- Sim_func(10,100,10000)
+finalframe_50 <- Sim_func(50,100,10000)
+finalframe_100 <- Sim_func(100,100,10000)
+finalframe_150 <- Sim_func(150,100,10000)
+finalframe_250 <- Sim_func(250,100,10000)
+finalframe_500 <- Sim_func(500,100,10000)
+finalframe_750 <- Sim_func(750,100,10000)
+finalframe_1000 <- Sim_func(1000,100,10000)
+```
+
+
+
+
+################ Visualization #####################
+
+```{r}
+Diff0 <- finalframe_5[22:26]
+Diff1 <- finalframe_10[22:26]
+Diff2 <- finalframe_50[22:26]
+Diff3 <- finalframe_100[22:26]
+Diff4 <- finalframe_150[22:26]
+Diff5 <- finalframe_250[22:26]
+Diff6 <- finalframe_500[22:26]
+Diff7 <- finalframe_750[22:26]
+Diff8 <- finalframe_1000[22:26]
+```
+
+```{r}
+DF0 <- reshape(Diff0, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff0)), direction = "long")
+DF1 <- reshape(Diff1, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff1)), direction = "long")
+DF2 <- reshape(Diff2, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff2)), direction = "long") 
+DF3 <- reshape(Diff3, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff3)), direction = "long") 
+DF4 <- reshape(Diff4, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff4)), direction = "long") 
+DF5 <- reshape(Diff5, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff5)), direction = "long") 
+DF6 <- reshape(Diff6, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff6)), direction = "long") 
+DF7 <- reshape(Diff7, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff7)), direction = "long")
+DF8 <- reshape(Diff8, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
+               varying = list(names(Diff7)), direction = "long") 
+```
+
+
+
+```{r}
+DF0$size <- rep("N=5", 50)
+DF1$size <- rep("N=10", 50)
+DF2$size <- rep("N=50", 50)
+DF3$size <- rep("N=100", 50)
+DF4$size <- rep("N=150", 50)
+DF5$size <- rep("N=250", 50)
+DF6$size <- rep("N=500", 50)
+DF7$size <- rep("N=750", 25250)
+DF8$size <- rep("N=1000", 25250)
+```
+
+
+```{r}
+DF.combine <- rbind(DF0,DF1, DF2, DF3, DF4,DF5,DF6,DF7,DF8)
+```
+
+```{r}
+DF.combine <- DF.combine %>%  mutate(N = ifelse(size=="N=5",5,
+                                       ifelse(size=="N=10",10,
+                    ifelse(size == "N=50", 50,
+                           ifelse(size == "N=100", 100,
+                                  ifelse(size == "N=150", 150,
+                                  ifelse(size == "N=250", 250,
+                                  ifelse(size == "N=500", 500,ifelse(size == "N=750", 750,
+                                         1000)))))))))
+
+```
+
+
+```{r}
+ggplot(DF.combine , aes(x=size, y= R_AFR_acc, color=Anc_Grp)) + #x = N, y = ancestry prop, fill = ancestry groups
+  geom_boxplot() + labs(x = "Sample Reference Size", y = "Ancestry Proportion")+
+  theme(plot.title = element_text(hjust = 0.5))+ ggtitle("Summix Proportion Estimation Accuracy for Latinx")+
+  scale_x_discrete(limits=c("N=5","N=10","N=50","N=100","N=150","N=250","N=500","N=1000"))+
+  facet_wrap(~Anc_Grp ,scales = "fixed")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
+
+```{r}
+dfB <- DF.combine %>%
+  group_by(Anc_Grp,N) %>%
+  summarize(mean = mean(R_AFR_acc),
+            std = sd(R_AFR_acc),
+           # minimum =min(R_AFR_acc), 
+            Q1=quantile(R_AFR_acc, .25), 
+           # median = median(R_AFR_acc),
+            Q3=quantile(R_AFR_acc, .75),
+            #maximum = max(R_AFR_acc), 
+           .groups = 'keep')
+```
+
+```{r}
+
+facet_lab <- c("AFR")
+names(facet_lab) <- c("R_AFR_acc")
+fun <- function(x) (1/-sqrt(2*x)+0.03)
+plot1 <-  dfB %>% filter (Anc_Grp=="R_AFR_acc" ) %>% ggplot(aes(x=as.numeric(N), y=as.numeric(mean), color=Anc_Grp)) +
+   geom_point(na.rm= TRUE) + theme(plot.title = element_text(hjust = 0.5))+ stat_function(fun=fun, colour="blue")+ ggtitle("Accuracy for Latinx")+
+   facet_wrap(~Anc_Grp, scales = "free", labeller=labeller(Anc_Grp= facet_lab))+geom_text(aes( x = 950, y = 0.03),label= expression(frac(1,-sqrt(2*N)+0.03)),color="black", size=3)+ theme(legend.position="none")+labs(x= "sample size" , y= "mean(simulated-truth)")
+  
+```
+
+
+```{r}
+
+facet_lab <- c("EAS","EUR","IAM","SAS")
+names(facet_lab) <- c("R_EAS_acc","R_EUR_acc","R_IAM_acc","R_SAS_acc")
+fun <- function(x) (1/sqrt(25*x)-0.01)
+plot2<- dfB %>% dplyr:: filter(Anc_Grp!="R_AFR_acc" ) %>% ggplot(aes(x=as.numeric(N), y=as.numeric(mean), color=Anc_Grp)) +
+   geom_point(na.rm= TRUE) + theme(plot.title = element_text(hjust = 0.5))+ stat_function(fun=fun, colour="blue",show.legend = TRUE)+ ggtitle("Accuracy for latinx")+
+   facet_wrap(~Anc_Grp, scales = "free", labeller=labeller(Anc_Grp= facet_lab))+ labs(x= "sample size" , y= "mean(simulated-truth)")+
+  theme(legend.position="none")+geom_text(aes( x = 950, y = 0.015),label= expression(frac(1,5*sqrt(N)-0.01)),
+          color="black", size=3)
+ 
+ library(cowplot)
+plot_grid(plot1,plot2, labels = "AUT0")
+ 
+```
+
+```{r}
+dfB_coverage <- DF.combine %>%
+  group_by(Anc_Grp,N) %>% mutate(Q1= R_AFR_acc-1.96*sd(R_AFR_acc),Q3= R_AFR_acc+1.96*sd(R_AFR_acc))%>% mutate(coverage = dplyr::if_else((Q1 < 0 & Q3 > 0), 1, 0)) # this is used just for filling 
+```
+
+```{r}
+
+facet_lab <- c("AFR","EAS","EUR","IAM","SAS")
+names(facet_lab) <- c("R_AFR_acc","R_EAS_acc","R_EUR_acc","R_IAM_acc","R_SAS_acc")
+
+dfB_coverage   %>% filter(N=="10"|N=="50" |N=="100"|N=="500"|N=="1000")%>% group_by(id)%>% ggplot(aes(x= id, y= R_AFR_acc,color=as.factor(coverage))) + geom_point() + geom_errorbar(aes(ymin = Q1, ymax = Q3))+facet_wrap(~Anc_Grp+N, labeller=labeller(Anc_Grp= facet_lab))+labs(x= "sample id",y="estimate")
+```
+
+```{r}
+dfB <- DF.combine %>%
+  group_by(Anc_Grp,N) %>%
+  summarize(mean = mean(R_AFR_acc),
+            std = sd(R_AFR_acc),
+           # minimum =min(R_AFR_acc), 
+            Q1=quantile(R_AFR_acc, .25), 
+           # median = median(R_AFR_acc),
+            Q3=quantile(R_AFR_acc, .75),
+            #maximum = max(R_AFR_acc), 
+           .groups = 'keep')
+```
+
+
+
+
+
+```{r}
+ dfB <- DF.combine %>%
+  group_by(Anc_Grp,N) %>%
+   summarize(mean = round(mean(R_AFR_acc),2),
+             std = round(sd(R_AFR_acc),2),
+            #minimum =min(R_AFR_acc), 
+             Q1=round(quantile(R_AFR_acc, .25),2), 
+          # median = median(R_AFR_acc),
+             Q3=round(quantile(R_AFR_acc, .75),2),
+            #maximum = max(R_AFR_acc), 
+          .groups = 'keep') %>% rename("Ancestry"=Anc_Grp, "sample size"=N, "95%_CI lower"=Q1,"95%_CI upper"=Q3) 
+
+dfB$Ancestry  <-  ifelse(dfB$Ancestry=="R_AFR_acc", "AFR",ifelse(dfB$Ancestry=="R_EAS_acc", "EAS", ifelse(dfB$Ancestry=="R_IAM_acc","IAM",ifelse(dfB$Ancestry=="R_SAS_acc","SAS", ifelse(dfB$Ancestry=="R_EUR_acc","EUR",0)))))
+
+
+
+write.csv(dfB, "1000_snp2.csv" )
+```
+
+
+
+```{r}
+EST0 <- finalframe_5[14:18]
+EST1 <- finalframe_10[14:18]
+EST2 <- finalframe_50[14:18]
+EST3 <- finalframe_100[14:18]
+EST4 <- finalframe_150[14:18]
+EST5 <- finalframe_250[14:18]
+EST6 <- finalframe_500[14:18]
+EST7 <- finalframe_750[14:18]
+EST8 <- finalframe_1000[14:18]
+```
+
+
+```{r}
+## see a for loop
+ES0 <- reshape(EST0 , times = c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST0 )), direction = "long")
+ES1 <- reshape(EST1 , times = c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST1 )), direction = "long")
+ES2 <- reshape(EST2, times = c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST2)), direction = "long") 
+ES3 <- reshape(EST3, times = c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST3)), direction = "long") 
+ES4 <- reshape(EST4, times = c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST4)), direction = "long") 
+
+ES5 <- reshape(EST5, times =  c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST5)), direction = "long") 
+
+ES6 <- reshape(EST6, times =  c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST6)), direction = "long") 
+ES7 <- reshape(EST7, times =  c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST7)), direction = "long") 
+ES8 <- reshape(EST8, times =  c("AFR", "EAS", "EUR" ,"IAM", "SAS"), timevar = "Anc_Grp",
+               varying = list(names(EST8)), direction = "long") 
+```
+
+```{r}
+ES0$size <- rep("N=5", 50)
+ES1$size <- rep("N=10", 50)
+ES2$size <- rep("N=50", 50)
+ES3$size <- rep("N=100", 50)
+ES4$size <- rep("N=150", 50)
+ES5$size <- rep("N=250", 50)
+ES6$size <- rep("N=500", 50)
+ES7$size <- rep("N=750", 50)
+ES8$size <- rep("N=1000", 50)
+
+```
+
+
+```{r}
+ES.combine <- rbind(ES0,ES1, ES2, ES3, ES4,ES5, ES6,ES7,ES8)
+```
+
+
+
+```{r}
+ES.combine <- ES.combine %>%  mutate(N = ifelse(size=="N=5",5,
+                                       ifelse(size=="N=10",10,
+                    ifelse(size == "N=50", 50,
+                           ifelse(size == "N=100", 100,
+                                  ifelse(size == "N=150", 150,
+                                  ifelse(size == "N=250", 250,
+                                  ifelse(size == "N=500", 500,ifelse(size == "N=750", 750,
+                                         1000)))))))))
+
+```
+
+
+```{r}
+ggplot(ES.combine , aes(x=size, y= AFR, color=Anc_Grp)) + #x = N, y = ancestry prop, fill = ancestry groups
+  geom_boxplot() + labs(x = "Sample Reference Size", y = "Ancestry Proportion")+
+  theme(plot.title = element_text(hjust = 0.5))+ ggtitle("Summix Proportion Estimation for Latinx ")+
+  scale_x_discrete(limits=c("N=10","N=50","N=100","N=150","N=250","N=500","N=1000"))+
+  facet_wrap(~Anc_Grp, scales = "fixed")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+
