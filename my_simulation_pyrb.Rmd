@@ -35,7 +35,7 @@ chr22  <- read.table("chr22.gnomad_hgdp1kg.merge.AFfiltered.text.gz",header = TR
 
 ```{r}
 
-# generating a real allele frequencies
+# generating real allele frequencies
 
 # AFR
 chr22$AF_AFR <- (chr22$Num_allele_obs_esn * chr22$allele_1_freq_esn + chr22$Num_allele_obs_gwd * chr22$allele_1_freq_gwd + chr22$Num_allele_obs_lwk * chr22$allele_1_freq_lwk + chr22$Num_allele_obs_msl * chr22$allele_1_freq_msl + chr22$Num_allele_obs_yri * chr22$allele_1_freq_yri + chr22$Num_allele_obs_bantukenya * chr22$allele_1_freq_bantukenya + chr22$Num_allele_obs_bantusafrica * chr22$allele_1_freq_bantusafrica + chr22$Num_allele_obs_mandenka * chr22$allele_1_freq_mandenka + chr22$Num_allele_obs_yoruba * chr22$allele_1_freq_yoruba)/ (chr22$Num_allele_obs_esn + chr22$Num_allele_obs_gwd + chr22$Num_allele_obs_lwk + chr22$Num_allele_obs_msl + chr22$Num_allele_obs_yri + chr22$Num_allele_obs_bantukenya + chr22$Num_allele_obs_bantusafrica + chr22$Num_allele_obs_mandenka + chr22$Num_allele_obs_yoruba)
@@ -73,7 +73,7 @@ refdat = chr22flt %>%
 
 ```{r}
 
-# generate an actual ancestry proportion (eg., African American population)
+# generate actual ancestry proportions (eg., African American population)
 parameters = NULL
 for (k in 1)
     {
@@ -135,6 +135,7 @@ Sim_func <- function(N, rep, SNPs){
   
 
 #### simulate reference allele frequencies for each of the 5 ancestries 
+
 # Generate allele counts for population using binom 
 
 AF_ref_AF  <- t(sapply(refdat[,4],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
@@ -163,7 +164,7 @@ AF_ref_SAS <- t(sapply(refdat[,8],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
      master_frame_gen2 <- master_frame_gen1[master_frame_gen1$AF > MAF_thresh & master_frame_gen1$AF < (1-MAF_thresh),]
     obsvecm = master_frame_gen2 %>% dplyr::select(rsID, AF)
     
-    ########## merge AF_obs with AF_ref for each replicates
+    ########## merge AF_obs with AF_ref for each replicate
     
     refdatsimu= cbind(refdat['rsID'], AF_ref_AF[,j], AF_ref_EAS[,j], AF_ref_EUR[,j],AF_ref_IAM[,j],  AF_ref_SAS[,j])
     colnames(refdatsimu) <- c("rsID","AFR","EAS", "EUR", "IAM", "SAS")
@@ -215,7 +216,7 @@ return(finalframe)
 
 
 ```{r}
-finalframe_5 <- Sim_func(5,100,10000)
+finalframe_5 <- Sim_func(5,100,10000) 
 finalframe_10 <- Sim_func(10,100,10000)
 finalframe_50 <- Sim_func(50,100,10000)
 finalframe_100 <- Sim_func(100,100,10000)
