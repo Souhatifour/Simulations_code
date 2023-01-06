@@ -173,7 +173,7 @@ AF_ref_SAS <- t(sapply(refdat[,8],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
     ######## run Summix
     R_sum = summix(as.data.frame(mergeframe), reference = c("AFR", "EAS", "EUR", "IAM", "SAS"), observed = "AF")
     
-    testinfo = data.frame(P_Num = m, T_Num = j, Seed = seed)
+    testinfo = data.frame( T_Num = j)
     
     # Save parameters
     parinfo = parameters
