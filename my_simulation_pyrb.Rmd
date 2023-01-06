@@ -35,7 +35,7 @@ chr22  <- read.table("chr22.gnomad_hgdp1kg.merge.AFfiltered.text.gz",header = TR
 
 ```{r}
 
-# generating real allele frequencies
+# calculating real allele frequencies
 
 # AFR
 chr22$AF_AFR <- (chr22$Num_allele_obs_esn * chr22$allele_1_freq_esn + chr22$Num_allele_obs_gwd * chr22$allele_1_freq_gwd + chr22$Num_allele_obs_lwk * chr22$allele_1_freq_lwk + chr22$Num_allele_obs_msl * chr22$allele_1_freq_msl + chr22$Num_allele_obs_yri * chr22$allele_1_freq_yri + chr22$Num_allele_obs_bantukenya * chr22$allele_1_freq_bantukenya + chr22$Num_allele_obs_bantusafrica * chr22$allele_1_freq_bantusafrica + chr22$Num_allele_obs_mandenka * chr22$allele_1_freq_mandenka + chr22$Num_allele_obs_yoruba * chr22$allele_1_freq_yoruba)/ (chr22$Num_allele_obs_esn + chr22$Num_allele_obs_gwd + chr22$Num_allele_obs_lwk + chr22$Num_allele_obs_msl + chr22$Num_allele_obs_yri + chr22$Num_allele_obs_bantukenya + chr22$Num_allele_obs_bantusafrica + chr22$Num_allele_obs_mandenka + chr22$Num_allele_obs_yoruba)
@@ -110,7 +110,7 @@ Ancestry_prop = as.numeric(parameters[1,])
 # number of ancestries
 Ancestry_num = dim(Ancestry_names)[2]
 
-
+ntot= 10000
 
 
 # Initialize output data frame
@@ -154,7 +154,7 @@ AF_ref_SAS <- t(sapply(refdat[,8],function(x){rbinom(rep, 2 * N, x)/ (2 * N)}))
   pop_matrix = matrix(0, nrow = SNPs, ncol = 3)
     
     ##### Generate allele counts for population using multinom 
-    for (i in 1:ancnum){
+    for (i in 1:Ancestry_num){
       popmatrixadd = t(sapply(refdat[[as.character(Ancestry_names[1,i])]], function(x){x2<-as.numeric(x); rmultinom(1, ntot * Ancestry_prop[i], prob=(c(x2**2, 2*x2*(1-x2), (1-x2)**2)))}))
       pop_matrix = pop_matrix + popmatrixadd
     }
