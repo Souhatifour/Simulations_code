@@ -262,7 +262,7 @@ DF6 <- reshape(Diff6, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_ac
 DF7 <- reshape(Diff7, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
                varying = list(names(Diff7)), direction = "long")
 DF8 <- reshape(Diff8, times = c("R_AFR_acc", "R_EAS_acc", "R_EUR_acc" ,"R_IAM_acc", "R_SAS_acc"), timevar = "Anc_Grp",
-               varying = list(names(Diff7)), direction = "long") 
+               varying = list(names(Diff8)), direction = "long") 
 ```
 
 
